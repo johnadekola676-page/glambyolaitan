@@ -230,26 +230,111 @@ button {
     height: var(--nav-height);
 }
 
+/* Masterpiece Logo Styles */
 .brand {
-    display: flex;
-    align-items: baseline;
-    gap: var(--sp-2);
-    font-family: var(--font-display);
-    font-size: 1.4rem;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
     z-index: 10;
 }
 
-.brand-text {
-    font-weight: 700;
-    color: var(--rose-700);
-    font-size: 1.6rem;
+.brand-masterpiece {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    line-height: 1;
+    position: relative;
+    padding-right: 8px;
 }
 
-.brand-accent {
-    font-weight: 400;
-    font-style: italic;
-    color: var(--gold-dark);
-    font-size: 1.1rem;
+.brand-glam {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 2rem;
+    letter-spacing: -0.02em;
+    text-transform: uppercase;
+    background: linear-gradient(135deg, #B8864E 0%, #D4A574 25%, #FFF0C0 50%, #D4A574 75%, #B8864E 100%);
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: shine 6s linear infinite;
+    position: relative;
+    z-index: 2;
+}
+
+.brand-signature {
+    font-family: 'Great Vibes', cursive;
+    font-size: 1.8rem;
+    color: var(--secondary-color);
+    margin-top: -12px;
+    margin-left: 2px;
+    background: var(--gradient-rose);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    transform: rotate(-3deg);
+    text-shadow: 0 2px 4px rgba(196, 69, 105, 0.1);
+    position: relative;
+    z-index: 1;
+}
+
+.brand-sparkle {
+    display: inline-block;
+    font-family: Arial, sans-serif;
+    font-size: 0.6em;
+    vertical-align: top;
+    color: #FFF0C0;
+    -webkit-text-fill-color: #FFF0C0;
+    position: absolute;
+    top: -4px;
+    right: -14px;
+    animation: twinkle 2.5s ease-in-out infinite;
+    text-shadow: 0 0 8px rgba(255, 240, 192, 0.8);
+}
+
+@keyframes shine {
+    to {
+        background-position: 200% center;
+    }
+}
+
+@keyframes twinkle {
+
+    0%,
+    100% {
+        transform: scale(0.8) rotate(0deg);
+        opacity: 0.5;
+    }
+
+    50% {
+        transform: scale(1.2) rotate(180deg);
+        opacity: 1;
+    }
+}
+
+/* Footer Logo Adjustments */
+.footer-brand .brand-masterpiece {
+    align-items: flex-start;
+    /* Changed to start to match left alignment of footer text */
+}
+
+.footer-brand .brand-glam {
+    font-size: 2.5rem;
+}
+
+.footer-brand .brand-signature {
+    margin-top: -14px;
+    font-size: 2.2rem;
+}
+
+@media (max-width: 640px) {
+    .brand-glam {
+        font-size: 1.7rem;
+    }
+
+    .brand-signature {
+        font-size: 1.5rem;
+        margin-top: -10px;
+    }
 }
 
 .nav-menu {
