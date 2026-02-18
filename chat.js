@@ -14,11 +14,11 @@
     const ENV = window.__ENV__ || {};
 
     const CONFIG = {
-        webhookUrl:    ENV.WEBHOOK_URL    || 'https://ola212.app.n8n.cloud/webhook/glam-website',
-        businessName:  ENV.BUSINESS_NAME  || 'Glam By Olaitan',
+        webhookUrl: ENV.WEBHOOK_URL || 'https://ola212.app.n8n.cloud/webhook/glam-website',
+        businessName: ENV.BUSINESS_NAME || 'Glam By Olaitan',
         businessPhone: ENV.BUSINESS_PHONE || '+2349069602020',
         businessEmail: ENV.BUSINESS_EMAIL || 'glam@olaitan.ng',
-        businessSlug:  ENV.BUSINESS_SLUG  || 'glam9069',
+        businessSlug: ENV.BUSINESS_SLUG || 'glam9069',
     };
 
     // ========================================================================
@@ -119,22 +119,43 @@
                 throw new Error('HTTP ' + response.status + ': ' + response.statusText);
             }
 
-            const data = await response.json();
+            const text = await response.text();
             removeTyping();
 
-            if (data.success && data.message) {
-                addMessage(data.message, 'bot');
+            // Try to parse as JSON, handle various response formats
+            let reply = '';
+            try {
+                const data = JSON.parse(text);
 
-                if (data.bookingReference) {
-                    localStorage.setItem('lastBookingReference', data.bookingReference);
-                }
+                // Handle various n8n response formats
+                if (typeof data === 'string') {
+                    reply = data;
+                } else if (Array.isArray(data) && data.length > 0) {
+                    // n8n sometimes returns arrays
+                    const first = data[0];
+                    reply = first.message || first.output || first.text || first.response || JSON.stringify(first);
+                } else if (data && typeof data === 'object') {
+                    reply = data.message || data.output || data.text || data.response || '';
 
-                if (data.intent === 'booking' && !getStored('userName')) {
-                    promptUserDetails();
+                    if (data.bookingReference) {
+                        localStorage.setItem('lastBookingReference', data.bookingReference);
+                    }
+                    if (data.intent === 'booking' && !getStored('userName')) {
+                        promptUserDetails();
+                    }
                 }
+            } catch {
+                // Not JSON — treat as plain text
+                reply = text;
+            }
+
+            if (reply && reply.trim()) {
+                addMessage(reply, 'bot');
             } else {
+                // Empty response — provide helpful fallback
                 addMessage(
-                    'Sorry, something went wrong. Please try again or contact us directly.',
+                    'Thanks for your message! Our booking system is processing your request. ' +
+                    'For immediate assistance, please WhatsApp us at ' + CONFIG.businessPhone + ' 💬',
                     'bot'
                 );
             }
