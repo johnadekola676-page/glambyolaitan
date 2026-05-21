@@ -29,40 +29,26 @@
     const messageHistory = [];
 
     // ========================================================================
-    // CHAT CONTROLS
+    // CHAT CONTROLS - NOW REDIRECTS TO WHATSAPP
     // ========================================================================
     function toggleChat() {
-        chatOpen ? closeChat() : openChat();
+        openChat();
     }
 
     function openChat() {
-        const widget = document.getElementById('chat-widget');
-        const fab = document.getElementById('chat-fab');
-        if (!widget || !fab) return;
+        // Create general booking WhatsApp message
+        const message = `Hello Glam By Olaitan! 💄✨\n\n` +
+                       `I'd like to inquire about your makeup services and book an appointment.\n\n` +
+                       `Please let me know your availability. Thank you!`;
 
-        widget.classList.add('active');
-        // Allow the display:flex to kick in before animating
-        requestAnimationFrame(() => {
-            widget.style.transform = 'translateY(0) scale(1)';
-            widget.style.opacity = '1';
-        });
-        fab.style.display = 'none';
-        chatOpen = true;
-
-        setTimeout(() => {
-            const input = document.getElementById('chat-input');
-            if (input) input.focus();
-        }, 350);
+        const encodedMessage = encodeURIComponent(message);
+        const whatsappUrl = `https://wa.me/${CONFIG.businessPhone.replace(/[^0-9]/g, '')}?text=${encodedMessage}`;
+        window.open(whatsappUrl, '_blank');
     }
 
     function closeChat() {
-        const widget = document.getElementById('chat-widget');
-        const fab = document.getElementById('chat-fab');
-        if (!widget || !fab) return;
-
-        widget.classList.remove('active');
-        fab.style.display = 'flex';
-        chatOpen = false;
+        // Not needed anymore since we're redirecting to WhatsApp
+        // Kept for backward compatibility
     }
 
     // ========================================================================
@@ -294,17 +280,44 @@
     }
 
     // ========================================================================
-    // SERVICE BOOKING SHORTCUT
+    // SERVICE BOOKING - WHATSAPP DIRECT
     // ========================================================================
     function bookService(serviceName) {
-        openChat();
-        setTimeout(() => {
-            const input = document.getElementById('chat-input');
-            if (input) {
-                input.value = 'I want to book ' + serviceName;
-                sendMessage();
-            }
-        }, 400);
+        // Service pricing mapping
+        const servicePricing = {
+            'Bridal Makeup': '₦35,000 - ₦50,000',
+            'Birthday Photoshoot Glam': '₦35,000',
+            'Soft Glam Makeup': '₦10,000',
+            'Owambe Glam': '₦10,000',
+            'Home Service': '+₦15,000 (additional)',
+            'Simple/Everyday Makeup': '₦10,000'
+        };
+
+        // Get price or default message
+        const price = servicePricing[serviceName] || 'Price varies';
+
+        // Generate placeholder date (7 days from now)
+        const futureDate = new Date();
+        futureDate.setDate(futureDate.getDate() + 7);
+        const dateStr = futureDate.toLocaleDateString('en-NG', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric'
+        });
+
+        // Create WhatsApp message
+        const message = `Hello! I'm interested in booking the following service:\n\n` +
+                       `*Service:* ${serviceName}\n` +
+                       `*Price:* ${price}\n` +
+                       `*Preferred Date:* ${dateStr} (please adjust to your preferred date)\n\n` +
+                       `Looking forward to your response! 💄✨`;
+
+        // Encode message for URL
+        const encodedMessage = encodeURIComponent(message);
+
+        // Open WhatsApp with pre-filled message
+        const whatsappUrl = `https://wa.me/${CONFIG.businessPhone.replace(/[^0-9]/g, '')}?text=${encodedMessage}`;
+        window.open(whatsappUrl, '_blank');
     }
 
     // ========================================================================
