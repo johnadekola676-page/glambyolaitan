@@ -287,10 +287,10 @@
         const servicePricing = {
             'Bridal Makeup': '₦35,000 - ₦50,000',
             'Birthday Photoshoot Glam': '₦35,000',
-            'Soft Glam Makeup': '₦10,000',
-            'Owambe Glam': '₦10,000',
+            'Soft Glam Makeup': '₦20,000',
+            'Owambe Glam': '₦30,000',
             'Home Service': '+₦15,000 (additional)',
-            'Simple/Everyday Makeup': '₦10,000'
+            'Simple/Everyday Makeup': '₦15,000'
         };
 
         // Get price or default message
